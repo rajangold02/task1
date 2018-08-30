@@ -50,7 +50,7 @@ resource "aws_security_group" "allow" {
 
 resource "aws_elb" "example" {
   name            = "${var.name}"
-  subnets         = "${var.subnet_id}"
+  subnets         = ["${var.subnet_id}"]
   security_groups = ["${aws_security_group.allow.id}"]
 
   listener {
