@@ -14,7 +14,7 @@ resource "aws_instance" "instance" {
     Name = "PhpInstance"
   }
 
-  user_data = "${file("./php.sh)}"
+  user_data = "${file("./php.sh")}"
 }
 
 resource "aws_security_group" "allow" {
