@@ -1,6 +1,6 @@
 variable "access_key" {}
 variable "secret_key" {}
-variable "aws_region" {}
+variable "region" {}
 
 variable "key_name" {
   default = "smartcity"
