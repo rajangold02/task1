@@ -5,5 +5,9 @@ sudo yum install httpd -y
 sudo yum install php -y
 sudo service httpd start
 cd /var/www/html
-sudo echo "<?php echo "Hello World!"; ?>" >index.php
+cat > index.php <<- "EOF"
+<?php
+echo "Hello World";
+?>
+EOF
 sudo service httpd restart
