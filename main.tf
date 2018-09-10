@@ -9,7 +9,7 @@ resource "aws_instance" "instance" {
   instance_type               = "${var.instance_type}"
   key_name                    = "${var.key_name}"
   subnet_id                   = "${var.subnet_id}"
-  security_groups             = ["${aws_security_group.allow.id}"]
+  security_groups             = ["${aws_security_group.allow-ec2.id}"]
   associate_public_ip_address = "true"
 
   tags {
@@ -18,8 +18,7 @@ resource "aws_instance" "instance" {
 
   user_data = "${file("./php.sh")}"
 }
-
-resource "aws_security_group" "allow" {
+resource "aws_security_group" "allow-ec2" {
   vpc_id      = "${var.vpc_id}"
   name        = "allow-ec2-sg"
   description = "security group that allows ssh,http and all egress traffic"
@@ -35,9 +34,32 @@ resource "aws_security_group" "allow" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["210.18.176.193/32"]
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_security_group.allow-elb.id}"]
+  }
+
+  tags {
+    Name = "allow_sg"
+  }
+}
+resource "aws_security_group" "allow-elb" {
+  vpc_id      = "${var.vpc_id}"
+  name        = "allow-elb-sg"
+  description = "security group that allows ssh,http and all egress traffic"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
   ingress {
     from_port   = 80
     to_port     = 80
@@ -53,7 +75,7 @@ resource "aws_security_group" "allow" {
 resource "aws_elb" "example" {
   name            = "${var.name}"
   subnets         = ["${var.subnet_id}"]
-  security_groups = ["${aws_security_group.allow.id}"]
+  security_groups = ["${aws_security_group.allow-elb.id}"]
 
   listener {
     instance_port     = 80

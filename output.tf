@@ -9,3 +9,7 @@ output "public_dns" {
 output "public_ip" {
   value = "${aws_instance.instance.public_ip}"
 }
+
+output "address" {
+  value = "${aws_elb.example.dns_name}"
+}
