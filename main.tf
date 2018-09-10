@@ -41,7 +41,7 @@ resource "aws_security_group" "allow-ec2" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${aws_security_group.allow-elb.id}"]
+    security_groups = ["${aws_security_group.allow-elb.id}"]
   }
 
   tags {
